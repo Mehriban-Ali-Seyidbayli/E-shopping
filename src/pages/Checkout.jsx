@@ -1,18 +1,31 @@
 import React, { useState } from "react";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
-const Checkout = () => {
+const Checkout = ({ setOrder }) => {
   const [billingToggle, setBillingToggle] = useState(true);
   const [shippingToggle, setShippingToggle] = useState(false);
   const [paymentToggle, setPaymentToggle] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("cod");
-  const cart = useSelector((state) => state.cart);
   const [shippingInfo, setShippingInfo] = useState({
     address: "",
     city: "",
     zip: "",
   });
+  const cart = useSelector((state) => state.cart);
+  const navigate = useNavigate();
+
+  const handleOrder = () => {
+    const newOrder = {
+      products: cart.products,
+      orderNumber: "12755756",
+      shippingInformation: shippingInfo,
+      totalPrice: cart.totalPrice,
+    };
+    setOrder(newOrder);
+    navigate("/order-confirmation");
+  };
   return (
     <div className="container mx-auto py-8 min-h-96 px-4 md:px-16 lg:px-24">
       <h3 className="text-2xl font-semibold mb-4">ÖDEME</h3>
@@ -225,7 +238,10 @@ const Checkout = () => {
               </span>
             </div>
           </div>
-          <button className="w-full bg-red-600 text-white py-2 mt-6 hover:bg-red-800">
+          <button
+            onClick={handleOrder}
+            className="w-full bg-red-600 text-white py-2 mt-6 hover:bg-red-800"
+          >
             Sipariş et
           </button>
         </div>
